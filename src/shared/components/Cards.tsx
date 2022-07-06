@@ -1,47 +1,45 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-import { Cartao, Conteudo, Descricao, HabilidadePokemon, Lista, Nome } from "../../styles/styledCards";
+import { Cartao, Conteudo, Page,} from "../../styles/styledCards";
 
 
 interface IPokemons{
     name: string;
-    url: string; 
-  
+    id: number;
+    sprites: {
+      front_default: string
+    }
+}
+interface ICardProps{
+  url: string;
+  next: string;
 }
 
 
-function CardPokemon(data: IPokemons){
-  const [pokemon, setPokemon] = useState<IPokemons[]>();
+export const CardPokemon: React.FC<ICardProps> = ({ url }) =>{
+  const [pokemon, setPokemon] = useState<IPokemons>();
 
-  
   
   useEffect(() => {
   const api = axios.create();   
-        api.get(`https://pokeapi.co/api/v2/pokemon/${data.name}`)
+        api.get(url)
         .then(response => {
-          setPokemon(response.data.results)
+          setPokemon(response.data)
         }
         ) 
       },[]);
        
 
-return (
-<Lista>
-    {pokemon?.map((pokemon) =>
-      (<Conteudo>
-        <Cartao >
-          <Nome key={pokemon.name}>{pokemon.name}</Nome>
-          <Descricao>{pokemon.url} </Descricao>
-        </Cartao>
-            
-    </Conteudo>))
-    } 
-</Lista>
-)   
-}
-export  default CardPokemon;
+return(
+  
+      <Conteudo>
+        <Cartao>
+          {pokemon?.name}
+          <img src={pokemon?.sprites.front_default} alt={pokemon?.name} />
+        </Cartao>     
+      </Conteudo>
+  
+)
 
-       
-    
+};
