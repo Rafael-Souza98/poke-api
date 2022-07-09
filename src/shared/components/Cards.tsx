@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Cartao, Conteudo, Page,} from "../../styles/styledCards";
+import { Cartao, Conteudo} from "../../styles/styledCards";
 
 
 interface IPokemons{
@@ -10,12 +10,12 @@ interface IPokemons{
     sprites: {
       front_default: string
     }
-}
+};
+
 interface ICardProps{
   url: string;
-  next: string;
-}
-
+ 
+};
 
 export const CardPokemon: React.FC<ICardProps> = ({ url }) =>{
   const [pokemon, setPokemon] = useState<IPokemons>();
@@ -30,9 +30,7 @@ export const CardPokemon: React.FC<ICardProps> = ({ url }) =>{
         ) 
       },[]);
        
-
 return(
-  
       <Conteudo>
         <Cartao>
           {pokemon?.name}
@@ -40,6 +38,5 @@ return(
         </Cartao>     
       </Conteudo>
   
-)
-
+      );  
 };
