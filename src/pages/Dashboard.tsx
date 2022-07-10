@@ -1,16 +1,15 @@
 
 
-import { dividerClasses, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
-import React, {  useCallback, useEffect, useState } from "react";
+import { Button,  TextField } from "@mui/material";
+import  {  useCallback, useEffect, useState } from "react";
 import { api } from "../services/api/ApiConfig";
 import { ButtonSearch } from "../shared/components/buttons";
 import { CardPokemon } from "../shared/components/Cards";
-import { Next } from "../styles/styledButtonNext";
-import { Page } from "../styles/styledCards";
+import { Page, SpanButton } from "../styles/styledCards";
 import { Position } from "../styles/styleSearchBar";
 
 
-interface IResponse{
+interface Response{
     count: number;
     next: string;
     previous: string;
@@ -26,51 +25,51 @@ interface Results{
 
 export const Dashboard = () =>{
     const [pokemon, setPokemon] = useState<Results[]>();
-    const [response, setResponse] = useState<IResponse>();
+    const [response, setResponse] = useState<Response>();
 
-    const handlePokemonsInState = useCallback((url: string) => {
-        api.get(url).then(res =>{
+    const handlePokemonsInState = useCallback(() => {
+        api.get(response?.next!!) .then(res =>{
             setResponse(res.data)
-            !!pokemon
-            ?setResponse({...pokemon, ...res.data.results})
-            : setResponse(res.data.results)
+            setPokemon([...pokemon!!, ...res.data.results])
         })
-    },[pokemon]);
 
-    const handleNewData = useCallback(() => {
-        response?.next && handlePokemonsInState(response?.next)
-    },[handlePokemonsInState, response?.next]);
+    },[pokemon, response?.next]);
 
     useEffect(() => {
        api.get('/pokemon')
-       .then(response => setPokemon(response.data.results))
+       .then(res => {
+        setPokemon(res.data.results)
+        setResponse(res.data)
+    })
     },[]);
 
     return(
         
     <div>  
          <Position>
-            <TextField 
-            
-            id="outlined-basic" 
-            label="Pokemon" 
-            variant="outlined" 
-            size="small" 
-            color="success"
-            />
-            <ButtonSearch />
-            <span> {response?.count} </span>       
+         <TextField 
+         id="outlined-basic" 
+         label="Pokemon" 
+         variant="outlined" 
+          size="small" 
+         color="success"
+        />
+
+            <ButtonSearch />         
         </Position>    
         
-                <Page>
+        <Page>
                 {pokemon?.map((poke) =>
                 <section>
                     <CardPokemon key={poke.name} url={poke.url}/> 
                 </section>
-                        )}
-                <button onClick={handleNewData}>... Mais </button>        
-                </Page>
-            </div> 
+                        )}     
+        </Page>
+
+            <SpanButton>
+                 <Button variant="contained" color="success" onClick={handlePokemonsInState}>Mais...</Button>
+            </SpanButton>
+     </div> 
     )
 }
 

@@ -25,7 +25,12 @@ flex-wrap: wrap;
 justify-content: center;
 
 `;
-
+export const SpanButton = styled.span`
+display: flex;
+justify-content: center;
+margin-top: 2em;
+margin-bottom: 2em;
+`;
 
 
 
